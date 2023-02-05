@@ -17,7 +17,7 @@ class DevelopmentConfig(Config):
 
 
 class TestingConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+    SQLALCHEMY_DATABASE_URI = "sqlite:///"+os.path.join(basedir, 'test_movies.db')
     TESTING = True
 
 

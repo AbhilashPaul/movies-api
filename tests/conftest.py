@@ -7,7 +7,7 @@ from app import create_app, alembic
 
 @pytest.fixture()
 def app(mocker):
-    mocker.patch.dict(os.environ, {"APP_CONFIG": "dev"})
+    mocker.patch.dict(os.environ, {"APP_CONFIG": "test"})
     app = create_app()
     with app.app_context():
         alembic.upgrade()

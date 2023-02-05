@@ -35,7 +35,7 @@ class MovieResource(Resource):
         try:
             data = movie_schema.load(request.get_json())
             if Movie.query_movie_by_title(data[PROPERTY_TITLE]):
-                abort(409, f"Movie with title {data[PROPERTY_TITLE]} already exists.")
+                abort(409, f"Movie with title '{data[PROPERTY_TITLE]}' already exists.")
             existing_movie = Movie.query_movie_by_id(movie_id)
             if existing_movie is None:
                 new_movie = Movie(

@@ -8,13 +8,13 @@ from api.resources import MovieResource, MovieListResource, MovieLikesResource, 
 from api.models import db, Movie
 from config import configurations
 
+alembic = Alembic()
 
 def create_app():
-    load_dotenv()
     app = Flask(__name__)
     app.config.from_object(configurations.get(os.getenv('APP_CONFIG') or 'default'))
     db.init_app(app)
-    Alembic(app)
+    alembic.init_app(app)
     api = Api(app)
     api.add_resource(MovieListResource, "/api/movies")
     api.add_resource(MovieResource, "/api/movies/<movie_id>")
@@ -24,5 +24,6 @@ def create_app():
 
 
 if __name__ == '__main__':
+    load_dotenv()
     app = create_app()
     app.run(port=5100)

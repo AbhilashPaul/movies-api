@@ -2,7 +2,7 @@ from datetime import date
 
 from marshmallow import Schema, fields, ValidationError
 
-from api.constants import CHARACTER_LIMIT_TITLE, CHARACTER_LIMIT_DESCRIPTION
+from api.constants import CHARACTER_LIMIT_TITLE, CHARACTER_LIMIT_DESCRIPTION, PATH_MOVIE_LIST
 
 
 def validate_character_count(data: str, max_length: int):
@@ -25,6 +25,7 @@ def validate_release_year(data: int):
 
 class MovieSchema(Schema):
     id = fields.Int(dump_only=True)
+    _links = fields.Method('add_hyperlinks')
     title = fields.Str(required=True, validate=validate_title)
     description = fields.Str(required=True, validate=validate_description)
     release_year = fields.Int(required=True, validate=validate_release_year)
@@ -32,6 +33,9 @@ class MovieSchema(Schema):
     rating = fields.Float(required=True)
     likes = fields.Int(dump_only=True)
     dislikes = fields.Int(dump_only=True)
+
+    def add_hyperlinks(self, obj):
+        return {'self': f'{PATH_MOVIE_LIST}/{obj.id}', 'collection': PATH_MOVIE_LIST}
 
 
 class MovieLikesSchema(Schema):

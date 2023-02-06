@@ -80,6 +80,7 @@ def test_create_movie(client):
     assert response_json["rating"] == fake_movie_1["rating"]
     assert response_json["likes"] == 0
     assert response_json["dislikes"] == 0
+    assert response_json["_links"] == {"self": f"/api/v1/movies/{response_json['id']}", "collection": "/api/v1/movies"}
 
 
 def test_create_movie_returns_422_given_movie_with_same_title_already_exist(client):
@@ -156,6 +157,7 @@ def test_update_movie(client):
     assert response_json["rating"] == fake_movie_2["rating"]
     assert response_json["likes"] == 0
     assert response_json["dislikes"] == 0
+    assert response_json["_links"] == {"self": f"/api/v1/movies/{response_json['id']}", "collection": "/api/v1/movies"}
 
 
 def test_update_movie_returns_400_given_invalid_release_year(client):
@@ -216,6 +218,7 @@ def test_update_movie_creates_new_record_given_specified_movie_does_not_exist(cl
     assert response_json["rating"] == fake_movie_update["rating"]
     assert response_json["likes"] == 0
     assert response_json["dislikes"] == 0
+    assert response_json["_links"] == {"self": f"/api/v1/movies/{response_json['id']}", "collection": "/api/v1/movies"}
 
 
 def test_get_movie_by_id(client):
@@ -253,7 +256,8 @@ def test_get_all_movies(client):
     assert response_json == [
         {
             'id': 1, 'title': 'Fake Title', 'description': 'Fake Description', 'duration_minutes': 132,
-            'rating': 9.0, 'release_year': 2000, 'likes': 0, 'dislikes': 0
+            'rating': 9.0, 'release_year': 2000, 'likes': 0, 'dislikes': 0,
+            '_links': {'self': '/api/v1/movies/1', 'collection': '/api/v1/movies'}
         }
     ]
 
@@ -276,6 +280,7 @@ def test_search_movie_by_title(client):
     assert response_json["rating"] == fake_movie_1["rating"]
     assert response_json["likes"] == 0
     assert response_json["dislikes"] == 0
+    assert response_json["_links"] == {"self": f"/api/v1/movies/{response_json['id']}", "collection": "/api/v1/movies"}
 
 
 def test_search_movie_by_title_returns_404_given_movie_does_not_exist(client):

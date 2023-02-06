@@ -14,7 +14,7 @@ alembic = Alembic()
 
 def create_app():
     app = Flask(__name__, root_path=os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
-    app.config.from_object(configurations.get(os.getenv('APP_CONFIG') or 'default'))
+    app.config.from_object(configurations.get(os.getenv('APP_CONFIG', default='dev')))
     db.init_app(app)
     alembic.init_app(app)
     api = Api(app)

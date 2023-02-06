@@ -177,6 +177,66 @@ def test_update_movie_returns_400_given_invalid_release_year(client):
     }
 
 
+def test_update_movie_returns_400_given_invalid_title(client):
+    # Given
+    create_movie_response = client.post(PATH_MOVIE_LIST, data=json.dumps(fake_movie_1), content_type='application/json')
+    movie_id = create_movie_response.get_json()['id']
+
+    # When
+    response = client.put(f"{PATH_MOVIE_LIST}/{movie_id}",
+                          data=json.dumps(fake_movie_with_invalid_title),
+                          content_type='application/json')
+
+    # Then
+    assert response.status_code == 400
+    assert response.get_json() == {'message': {'title': ['Text input must be less than 100 characters.']}}
+
+
+def test_update_movie_returns_400_given_invalid_description(client):
+    # Given
+    create_movie_response = client.post(PATH_MOVIE_LIST, data=json.dumps(fake_movie_1), content_type='application/json')
+    movie_id = create_movie_response.get_json()['id']
+
+    # When
+    response = client.put(f"{PATH_MOVIE_LIST}/{movie_id}",
+                          data=json.dumps(fake_movie_with_invalid_description),
+                          content_type='application/json')
+
+    # Then
+    assert response.status_code == 400
+    assert response.get_json() == {'message': {'description': ['Text input must be less than 300 characters.']}}
+
+
+def test_update_movie_returns_400_given_invalid_duration(client):
+    # Given
+    create_movie_response = client.post(PATH_MOVIE_LIST, data=json.dumps(fake_movie_1), content_type='application/json')
+    movie_id = create_movie_response.get_json()['id']
+
+    # When
+    response = client.put(f"{PATH_MOVIE_LIST}/{movie_id}",
+                          data=json.dumps(fake_movie_with_invalid_duration_minutes),
+                          content_type='application/json')
+
+    # Then
+    assert response.status_code == 400
+    assert response.get_json() == {'message': {'duration_minutes': ['Not a valid integer.']}}
+
+
+def test_update_movie_returns_400_given_invalid_rating(client):
+    # Given
+    create_movie_response = client.post(PATH_MOVIE_LIST, data=json.dumps(fake_movie_1), content_type='application/json')
+    movie_id = create_movie_response.get_json()['id']
+
+    # When
+    response = client.put(f"{PATH_MOVIE_LIST}/{movie_id}",
+                          data=json.dumps(fake_movie_with_invalid_rating),
+                          content_type='application/json')
+
+    # Then
+    assert response.status_code == 400
+    assert response.get_json() == {'message': {'rating': ['Not a valid number.']}}
+
+
 def test_update_movie_returns_409_given_movie_with_same_title_already_exist(client):
     # Given
     client.post(PATH_MOVIE_LIST, data=json.dumps(fake_movie_1), content_type='application/json')

@@ -36,6 +36,18 @@ def test_create_movie(client):
     assert response_json["dislikes"] == 0
 
 
+def test_create_movie_returns_422_when_movie_with_same_title_already_exist(client):
+    # Given
+    client.post(PATH_MOVIE_LIST, data=json.dumps(fake_movie_1), content_type='application/json')
+
+    # When
+    response = client.post(PATH_MOVIE_LIST, data=json.dumps(fake_movie_1), content_type='application/json')
+
+    # Then
+    assert response.status_code == 422
+    assert response.get_json() == {'message': "Movie with title 'Fake Title' already exists."}
+
+
 def test_update_movie(client):
     # Given
     create_movie_response = client.post(PATH_MOVIE_LIST, data=json.dumps(fake_movie_1), content_type='application/json')

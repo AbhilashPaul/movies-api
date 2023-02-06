@@ -186,3 +186,131 @@ def test_delete_movie_returns_404_when_movie_does_not_exist(client):
     response = client.delete(f"{PATH_MOVIE_LIST}/1")
     assert response.status_code == 404
     assert response.get_json() == {'message': 'Could not find movie with id 1'}
+
+
+def test_like_movie(client):
+    # Given
+    create_movie_response = client.post(PATH_MOVIE_LIST, data=json.dumps(fake_movie_1), content_type='application/json')
+    created_movie = create_movie_response.get_json()
+    movie_id = created_movie['id']
+    likes = created_movie['likes']
+
+    # When
+    response = client.post(f"{PATH_MOVIE_LIST}/{movie_id}/likes")
+
+    # Then
+    assert response.status_code == 204
+    get_response = client.get(f"{PATH_MOVIE_LIST}/{movie_id}/likes")
+    assert get_response.get_json()['likes'] == likes + 1
+
+
+def test_get_like_count(client):
+    # Given
+    create_movie_response = client.post(PATH_MOVIE_LIST, data=json.dumps(fake_movie_1), content_type='application/json')
+    created_movie = create_movie_response.get_json()
+    movie_id = created_movie['id']
+    client.post(f"{PATH_MOVIE_LIST}/{movie_id}/likes")
+    client.post(f"{PATH_MOVIE_LIST}/{movie_id}/likes")
+
+    # When
+    response = client.get(f"{PATH_MOVIE_LIST}/{movie_id}/likes")
+
+    # Then
+    assert response.status_code == 200
+    assert response.get_json()['likes'] == 2
+
+
+def test_delete_like_from_a_movie(client):
+    # Given
+    create_movie_response = client.post(PATH_MOVIE_LIST, data=json.dumps(fake_movie_1), content_type='application/json')
+    created_movie = create_movie_response.get_json()
+    movie_id = created_movie['id']
+    client.post(f"{PATH_MOVIE_LIST}/{movie_id}/likes")
+    likes = created_movie['likes'] + 1
+
+    # When
+    delete_response = client.delete(f"{PATH_MOVIE_LIST}/{movie_id}/likes")
+
+    # Then
+    assert delete_response.status_code == 204
+    get_response = client.get(f"{PATH_MOVIE_LIST}/{movie_id}/likes")
+    assert get_response.get_json()['likes'] == likes - 1
+
+
+def test_delete_like_does_not_remove_like_given_movie_was_never_liked(client):
+    # Given
+    create_movie_response = client.post(PATH_MOVIE_LIST, data=json.dumps(fake_movie_1), content_type='application/json')
+    created_movie = create_movie_response.get_json()
+    movie_id = created_movie['id']
+
+    # When
+    delete_response = client.delete(f"{PATH_MOVIE_LIST}/{movie_id}/likes")
+
+    # Then
+    assert delete_response.status_code == 204
+    get_response = client.get(f"{PATH_MOVIE_LIST}/{movie_id}/likes")
+    assert get_response.get_json()['likes'] == 0
+
+
+def test_dislike_movie(client):
+    # Given
+    create_movie_response = client.post(PATH_MOVIE_LIST, data=json.dumps(fake_movie_1), content_type='application/json')
+    created_movie = create_movie_response.get_json()
+    movie_id = created_movie['id']
+    dislikes = created_movie['dislikes']
+
+    # When
+    response = client.post(f"{PATH_MOVIE_LIST}/{movie_id}/dislikes")
+
+    # Then
+    assert response.status_code == 204
+    get_response = client.get(f"{PATH_MOVIE_LIST}/{movie_id}")
+    assert get_response.get_json()['dislikes'] == dislikes + 1
+
+
+def test_get_dislike_count(client):
+    # Given
+    create_movie_response = client.post(PATH_MOVIE_LIST, data=json.dumps(fake_movie_1), content_type='application/json')
+    created_movie = create_movie_response.get_json()
+    movie_id = created_movie['id']
+    client.post(f"{PATH_MOVIE_LIST}/{movie_id}/dislikes")
+    client.post(f"{PATH_MOVIE_LIST}/{movie_id}/dislikes")
+
+    # When
+    response = client.get(f"{PATH_MOVIE_LIST}/{movie_id}/dislikes")
+
+    # Then
+    assert response.status_code == 200
+    assert response.get_json()['dislikes'] == 2
+
+
+def test_delete_dislike(client):
+    # Given
+    create_movie_response = client.post(PATH_MOVIE_LIST, data=json.dumps(fake_movie_1), content_type='application/json')
+    created_movie = create_movie_response.get_json()
+    movie_id = created_movie['id']
+    client.post(f"{PATH_MOVIE_LIST}/{movie_id}/dislikes")
+    dislikes = created_movie['dislikes'] + 1
+
+    # When
+    delete_response = client.delete(f"{PATH_MOVIE_LIST}/{movie_id}/dislikes")
+
+    # Then
+    assert delete_response.status_code == 204
+    get_response = client.get(f"{PATH_MOVIE_LIST}/{movie_id}/dislikes")
+    assert get_response.get_json()['dislikes'] == dislikes - 1
+
+
+def test_delete_dislike_does_not_remove_dislike_given_movie_was_never_disliked(client):
+    # Given
+    create_movie_response = client.post(PATH_MOVIE_LIST, data=json.dumps(fake_movie_1), content_type='application/json')
+    created_movie = create_movie_response.get_json()
+    movie_id = created_movie['id']
+
+    # When
+    delete_response = client.delete(f"{PATH_MOVIE_LIST}/{movie_id}/dislikes")
+
+    # Then
+    assert delete_response.status_code == 204
+    get_response = client.get(f"{PATH_MOVIE_LIST}/{movie_id}/dislikes")
+    assert get_response.get_json()['dislikes'] == 0

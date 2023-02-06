@@ -94,14 +94,13 @@ class MovieLikesResource(Resource):
 
     def post(self, movie_id):
         movie = get_movie_from_db(movie_id)
-        like_count = 1 if movie.likes is None else movie.likes + 1
-        movie.update(likes=like_count)
+        movie.update(likes=movie.likes + 1)
         return '', 204
 
     def delete(self, movie_id):
         movie = get_movie_from_db(movie_id)
-        like_count = 0 if movie.likes is None else movie.likes - 1
-        movie.update(likes=like_count)
+        if movie.likes > 0:
+            movie.update(likes=movie.likes - 1)
         return '', 204
 
 
@@ -113,12 +112,11 @@ class MovieDislikesResource(Resource):
 
     def post(self, movie_id):
         movie = get_movie_from_db(movie_id)
-        dislike_count = 1 if movie.dislikes is None else movie.dislikes + 1
-        movie.update(dislikes=dislike_count)
+        movie.update(dislikes=movie.dislikes + 1)
         return '', 204
 
     def delete(self, movie_id):
         movie = get_movie_from_db(movie_id)
-        dislike_count = 0 if movie.dislikes is None else movie.dislikes - 1
-        movie.update(dislikes=dislike_count)
+        if movie.dislikes > 0:
+            movie.update(dislikes=movie.dislikes - 1)
         return '', 204

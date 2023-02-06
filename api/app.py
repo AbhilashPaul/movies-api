@@ -7,13 +7,13 @@ from flask_restful import Api
 from api.constants import PATH_MOVIE_LIST, PATH_MOVIE, PATH_MOVIE_LIKES, PATH_MOVIE_DISLIKES
 from api.resources import MovieResource, MovieListResource, MovieLikesResource, MovieDislikesResource
 from api.models import db, Movie
-from config import configurations
+from api.config import configurations
 
 alembic = Alembic()
 
 
 def create_app():
-    app = Flask(__name__)
+    app = Flask(__name__, root_path=os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
     app.config.from_object(configurations.get(os.getenv('APP_CONFIG') or 'default'))
     db.init_app(app)
     alembic.init_app(app)

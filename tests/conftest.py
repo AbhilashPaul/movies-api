@@ -2,7 +2,7 @@ import os
 
 import pytest
 
-from app import create_app, alembic
+from api.app import create_app, alembic
 
 
 @pytest.fixture()

@@ -3,7 +3,7 @@ To run the flask application
   ```
   flask db upgrade
   ```
-- run the application
+- Run the application
   ```
   flask run
   ```

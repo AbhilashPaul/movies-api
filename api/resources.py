@@ -1,9 +1,9 @@
-from flask import request, abort
+from flask import request, abort, url_for
 from flask_restful import Resource, reqparse
 from marshmallow import ValidationError
 
 from api.constants import PROPERTY_RATING, PROPERTY_DURATION_MINUTES, PROPERTY_RELEASE_YEAR, PROPERTY_DESCRIPTION, \
-    PROPERTY_TITLE
+    PROPERTY_TITLE, PATH_MOVIE_LIST
 from api.models import Movie
 from api.schemas import MovieSchema, MovieLikesSchema, MovieDislikesSchema
 
@@ -66,7 +66,7 @@ class MovieListResource(Resource):
                 data[PROPERTY_DURATION_MINUTES], data[PROPERTY_RATING]) \
                 .create()
             response = movie_schema.dump(new_movie)
-            return response, 201
+            return response, 201, {'location': f'{PATH_MOVIE_LIST}/{new_movie.id}'}
         except ValidationError as err:
             abort(400, err.messages)
 

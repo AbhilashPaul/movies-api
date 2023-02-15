@@ -63,3 +63,29 @@ class Movie(db.Model):
     @staticmethod
     def query_movies():
         return Movie.query.all()
+
+    @staticmethod
+    def increment_likes(movie_id):
+        movie = Movie.query.filter(Movie.id == movie_id).first()
+        movie.likes = Movie.likes + 1
+        db.session.commit()
+
+    @staticmethod
+    def decrement_likes(movie_id):
+        movie = Movie.query.filter(Movie.id == movie_id).first()
+        if movie.likes > 0:
+            movie.likes = Movie.likes - 1
+            db.session.commit()
+
+    @staticmethod
+    def increment_dislikes(movie_id):
+        movie = Movie.query.filter(Movie.id == movie_id).first()
+        movie.dislikes = Movie.dislikes + 1
+        db.session.commit()
+
+    @staticmethod
+    def decrement_dislikes(movie_id):
+        movie = Movie.query.filter(Movie.id == movie_id).first()
+        if movie.dislikes > 0:
+            movie.dislikes = Movie.dislikes - 1
+            db.session.commit()

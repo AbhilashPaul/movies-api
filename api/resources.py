@@ -93,14 +93,11 @@ class MovieLikesResource(Resource):
         return response, 200
 
     def post(self, movie_id):
-        movie = get_movie_from_db(movie_id)
-        movie.update(likes=movie.likes + 1)
+        Movie.increment_likes(movie_id)
         return '', 204
 
     def delete(self, movie_id):
-        movie = get_movie_from_db(movie_id)
-        if movie.likes > 0:
-            movie.update(likes=movie.likes - 1)
+        Movie.decrement_likes(movie_id)
         return '', 204
 
 
@@ -111,12 +108,9 @@ class MovieDislikesResource(Resource):
         return response, 200
 
     def post(self, movie_id):
-        movie = get_movie_from_db(movie_id)
-        movie.update(dislikes=movie.dislikes + 1)
+        Movie.increment_dislikes(movie_id)
         return '', 204
 
     def delete(self, movie_id):
-        movie = get_movie_from_db(movie_id)
-        if movie.dislikes > 0:
-            movie.update(dislikes=movie.dislikes - 1)
+        Movie.decrement_dislikes(movie_id)
         return '', 204

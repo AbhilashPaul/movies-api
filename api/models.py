@@ -33,8 +33,7 @@ class Movie(db.Model):
         db.session.delete(self)
         db.session.commit()
 
-    def update(self, title=None, description=None, release_year=None,
-               duration_minutes=None, rating=None, likes=None, dislikes=None):
+    def update(self, title=None, description=None, release_year=None, duration_minutes=None, rating=None):
         if title is not None:
             self.title = title
         if description is not None:
@@ -45,10 +44,6 @@ class Movie(db.Model):
             self.duration_minutes = duration_minutes
         if rating is not None:
             self.rating = rating
-        if likes is not None:
-            self.likes = likes
-        if dislikes is not None:
-            self.dislikes = dislikes
         db.session.commit()
         return self
 

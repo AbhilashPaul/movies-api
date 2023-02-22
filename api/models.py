@@ -47,6 +47,24 @@ class Movie(db.Model):
         db.session.commit()
         return self
 
+    def increment_likes(self):
+        self.likes = Movie.likes + 1
+        db.session.commit()
+
+    def decrement_likes(self):
+        if self.likes > 0:
+            self.likes = Movie.likes - 1
+            db.session.commit()
+
+    def increment_dislikes(self):
+        self.dislikes = Movie.dislikes + 1
+        db.session.commit()
+
+    def decrement_dislikes(self):
+        if self.dislikes > 0:
+            self.dislikes = Movie.dislikes - 1
+            db.session.commit()
+
     @staticmethod
     def query_movie_by_title(title):
         return Movie.query.filter_by(title=title).first()
@@ -58,29 +76,3 @@ class Movie(db.Model):
     @staticmethod
     def query_movies():
         return Movie.query.all()
-
-    @staticmethod
-    def increment_likes(movie_id):
-        movie = Movie.query.filter(Movie.id == movie_id).first()
-        movie.likes = Movie.likes + 1
-        db.session.commit()
-
-    @staticmethod
-    def decrement_likes(movie_id):
-        movie = Movie.query.filter(Movie.id == movie_id).first()
-        if movie.likes > 0:
-            movie.likes = Movie.likes - 1
-            db.session.commit()
-
-    @staticmethod
-    def increment_dislikes(movie_id):
-        movie = Movie.query.filter(Movie.id == movie_id).first()
-        movie.dislikes = Movie.dislikes + 1
-        db.session.commit()
-
-    @staticmethod
-    def decrement_dislikes(movie_id):
-        movie = Movie.query.filter(Movie.id == movie_id).first()
-        if movie.dislikes > 0:
-            movie.dislikes = Movie.dislikes - 1
-            db.session.commit()
